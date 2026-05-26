@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TaskFlow — Board</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <a href="dashboard.html" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px">
+        <span class="brand-icon">⬡</span>
+        <span>Tasklo</span>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">🏠 Dashboard</a>
+      <a href="#" class="nav-item" id="board-nav-item">📋 <span id="board-project-name">Board</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-avatar" id="user-avatar-initial"></div>
+      <div class="user-info">
+        <span id="sidebar-username">Loading...</span>
+        <small id="sidebar-email"></small>
+      </div>
+      <button class="logout-btn" onclick="logout()" title="Logout">↩</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content board-main">
+    <header class="page-header">
+      <div>
+        <h2 id="board-title">Loading...</h2>
+        <p id="board-description" class="subtitle"></p>
+      </div>
+      <div class="header-actions">
+        <div id="members-avatars" class="members-avatars"></div>
+        <button class="btn-primary" onclick="openNewTaskModal()">+ Add Task</button>
+      </div>
+    </header>
+
+    <!-- Live indicator -->
+    <div class="live-badge">🟢 Live</div>
+
+    <!-- Kanban Board -->
+    <div class="kanban-board" id="kanban-board">
+      <!-- Columns injected by JS -->
+    </div>
+  </main>
+
+  <!-- Task Modal (Create / View) -->
+  <div id="task-modal" class="modal hidden">
+    <div class="modal-overlay" onclick="closeModal('task-modal')"></div>
+    <div class="modal-box wide">
+      <h3 id="task-modal-title">New Task</h3>
+
+      <div id="task-create-form">
+        <div class="form-group">
+          <label>Task Title *</label>
+          <input type="text" id="task-title" placeholder="What needs to be done?" />
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="task-desc" placeholder="Add more details..." rows="3"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Status</label>
+            <select id="task-status">
+              <option value="todo">📋 To Do</option>
+              <option value="inprogress">🔄 In Progress</option>
+              <option value="review">👀 Review</option>
+              <option value="done">✅ Done</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Priority</label>
+            <select id="task-priority">
+              <option value="low">🟢 Low</option>
+              <option value="medium" selected>🟡 Medium</option>
+              <option value="high">🟠 High</option>
+              <option value="urgent">🔴 Urgent</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Assign To</label>
+            <select id="task-assignee">
+              <option value="">— Unassigned —</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Due Date</label>
+            <input type="date" id="task-due" />
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="closeModal('task-modal')">Cancel</button>
+          <button class="btn-primary" onclick="submitTask()">Create Task</button>
+        </div>
+        <p id="task-error" class="error-msg"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task Detail Modal -->
+  <div id="task-detail-modal" class="modal hidden">
+    <div class="modal-overlay" onclick="closeModal('task-detail-modal')"></div>
+    <div class="modal-box wide">
+      <div class="task-detail-header">
+        <div>
+          <span id="detail-priority-badge" class="priority-badge"></span>
+          <h3 id="detail-title"></h3>
+        </div>
+        <button class="close-btn" onclick="closeModal('task-detail-modal')">✕</button>
+      </div>
+
+      <div class="task-detail-body">
+        <div class="detail-left">
+          <p id="detail-description" class="detail-desc"></p>
+
+          <div class="detail-meta">
+            <div class="meta-item">
+              <span class="meta-label">Status</span>
+              <select id="detail-status" onchange="updateTaskStatus()">
+                <option value="todo">📋 To Do</option>
+                <option value="inprogress">🔄 In Progress</option>
+                <option value="review">👀 Review</option>
+                <option value="done">✅ Done</option>
+              </select>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Assigned To</span>
+              <span id="detail-assignee">—</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Due Date</span>
+              <span id="detail-due">—</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Created By</span>
+              <span id="detail-creator">—</span>
+            </div>
+          </div>
+
+          <div class="detail-actions">
+            <button class="btn-danger" onclick="deleteCurrentTask()">🗑 Delete Task</button>
+          </div>
+        </div>
+
+        <div class="detail-right">
+          <h4>💬 Comments</h4>
+          <div id="comments-list" class="comments-list"></div>
+          <div class="comment-input-area">
+            <textarea id="new-comment" placeholder="Write a comment..." rows="2"></textarea>
+            <button class="btn-primary" onclick="addComment()">Post</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/board.js"></script>
+</body>
+</html>

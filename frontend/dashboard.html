@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TaskFlow — Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">⬡</span>
+      <span>TaskFlow</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item active">🏠 Dashboard</a>
+      <a href="#" class="nav-item" onclick="openNewProjectModal()">➕ New Project</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-avatar" id="user-avatar-initial"></div>
+      <div class="user-info">
+        <span id="sidebar-username">Loading...</span>
+        <small id="sidebar-email"></small>
+      </div>
+      <button class="logout-btn" onclick="logout()" title="Logout">↩</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="page-header">
+      <div>
+        <h2>My Projects</h2>
+        <p id="projects-count" class="subtitle">Loading...</p>
+      </div>
+      <button class="btn-primary" onclick="openNewProjectModal()">+ New Project</button>
+    </header>
+
+    <!-- Project Grid -->
+    <div id="projects-grid" class="projects-grid">
+      <div class="loading-spinner">Loading projects...</div>
+    </div>
+  </main>
+
+  <!-- New Project Modal -->
+  <div id="project-modal" class="modal hidden">
+    <div class="modal-overlay" onclick="closeModal('project-modal')"></div>
+    <div class="modal-box">
+      <h3>Create New Project</h3>
+      <div class="form-group">
+        <label>Project Title *</label>
+        <input type="text" id="proj-title" placeholder="e.g. Website Redesign" />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="proj-desc" placeholder="What is this project about?" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Board Color</label>
+        <div class="color-picker">
+          <span class="color-dot selected" style="background:#6366f1" data-color="#6366f1" onclick="selectColor(this)"></span>
+          <span class="color-dot" style="background:#ec4899" data-color="#ec4899" onclick="selectColor(this)"></span>
+          <span class="color-dot" style="background:#f59e0b" data-color="#f59e0b" onclick="selectColor(this)"></span>
+          <span class="color-dot" style="background:#10b981" data-color="#10b981" onclick="selectColor(this)"></span>
+          <span class="color-dot" style="background:#3b82f6" data-color="#3b82f6" onclick="selectColor(this)"></span>
+          <span class="color-dot" style="background:#ef4444" data-color="#ef4444" onclick="selectColor(this)"></span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('project-modal')">Cancel</button>
+        <button class="btn-primary" onclick="createProject()">Create Project</button>
+      </div>
+      <p id="proj-error" class="error-msg"></p>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
