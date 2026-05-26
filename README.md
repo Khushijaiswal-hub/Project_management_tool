@@ -94,3 +94,8 @@ Working on this project taught me a lot about how authentication actually works 
 ---
 
 Made with lots of debugging and coffee during my CodeAlpha internship.
+
+
+![Homepage](.png)
+![project](.2png)
+![tasks](task.png)
